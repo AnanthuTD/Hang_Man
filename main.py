@@ -6,16 +6,24 @@ import random
 window = Tk()
 
 window.title("Python GUI App")
-window.configure(width=500, height=300)
+# window.configure(width=1000, height=600)
 window.configure(bg='grey')
 
 # move window center
-winWidth = window.winfo_reqwidth()
-winHeight = window.winfo_reqheight()
+winWidth = 1000
+winHeight = 600
 posRight = int(window.winfo_screenwidth() / 2 - winWidth / 2)
 posDown = int(window.winfo_screenheight() / 2 - winHeight / 2)
-window.geometry("+{}+{}".format(posRight, posDown))
+window.geometry("{}x{}+{}+{}".format(winWidth, winHeight, posRight, posDown))
 
+label = Label(window, text="working")
+label.pack()
+
+"""# Add a text widget
+text = Text(window, width=80, height=15)
+text.insert(END, "hi")
+text.pack()
+"""
 
 """print('\033[1m \033[92m-------------------------------------------------------------------\033[92m\n'
       '\n'
