@@ -6,5 +6,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="fecd964b4754debfa0d092a90e475f4a" />
+    <orderEntry type="module" module-name="gist" />
   </component>
 </module>

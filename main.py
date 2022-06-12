@@ -1,13 +1,17 @@
-import colorsys
 from tkinter import *
+
+from squarcle import *
 from word_list import words as lst
 import random
 
 window = Tk()
 
+canvas = Canvas(window,bg="#121212",bd=0,highlightthickness=0, width=900, height=300)
+canvas.pack()
+textBox = round_rectangle(0, 50, 900, 200, 'grey', canvas)
+
 window.title("Python GUI App")
-# window.configure(width=1000, height=600)
-window.configure(bg='grey')
+window.configure(bg='#121212')
 
 # move window center
 winWidth = 1000
@@ -16,8 +20,12 @@ posRight = int(window.winfo_screenwidth() / 2 - winWidth / 2)
 posDown = int(window.winfo_screenheight() / 2 - winHeight / 2)
 window.geometry("{}x{}+{}+{}".format(winWidth, winHeight, posRight, posDown))
 
-label = Label(window, text="working")
-label.pack()
+
+
+
+
+label = Label(window, text="working", height=100, width=900)
+# label.pack()
 
 """# Add a text widget
 text = Text(window, width=80, height=15)
