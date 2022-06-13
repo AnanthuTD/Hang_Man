@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/HangMan.iml" filepath="$PROJECT_DIR$/.idea/HangMan.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../fecd964b4754debfa0d092a90e475f4a/.idea/fecd964b4754debfa0d092a90e475f4a.iml" filepath="$PROJECT_DIR$/../fecd964b4754debfa0d092a90e475f4a/.idea/fecd964b4754debfa0d092a90e475f4a.iml" />
       <module fileurl="file://$PROJECT_DIR$/gist/.idea/gist.iml" filepath="$PROJECT_DIR$/gist/.idea/gist.iml" />
     </modules>
   </component>
