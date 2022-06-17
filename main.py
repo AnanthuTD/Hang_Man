@@ -1,21 +1,116 @@
+import tkinter as tk
 import tkinter as ttk
-
-import style as style
-
+from tkinter.ttk import *
+from RandomWord import random_word
 from squarcle import *
 
-from tkinter.ttk import *
-
-from Game import *
-
-hm = HangMan
-
 window = ttk.Tk()
-
 canvas = ttk.Canvas(window, bg="#121212", bd=0, highlightthickness=0, width=900, height=300)
 textBox = round_rectangle(0, 50, 900, 200, 'grey', canvas)
 canvas.pack()
 
+# function variable declaration
+j = 0
+win = 0
+count = 0
+ges_word = []
+str1 = ''
+word = ''
+entered_letter = []
+list_ = 1
+life = 5  # total five life left
+
+retry_label = ttk.Label()
+disp_label = ttk.Label()
+won_label = ttk.Label()
+
+
+def select_function(guess):
+    if life == 0:
+        retry_label.place_forget()
+        start()
+    else:
+        hang_man(guess)
+
+
+def start():
+    # word = random.choice(lst)  # SELECTING A RANDOM WORD FROM word_list.py
+    global word, life, j, win, count, ges_word, entered_letter, disp_label
+    j = 0
+    win = 0
+    count = 0
+    ges_word = []
+    word = ''
+    life = 5
+    word = str(random_word())  # selecting a random word
+
+    print(word)
+    print('\033[1m \033[92m-------------------------------------------------------------------\033[92m\n'
+          '\n'
+          '    \033[96m                       HANGMAN                     \033[96m            \n'
+          '\n'
+          '\033[92m--------------------------------------------------------------------\033[0m\n'
+          )
+
+    for i in word:
+        if i.isalpha():
+            ges_word.append('_')  # (_ _ _ ......)
+            entered_letter.append('_')
+            entered_letter.append('_')
+            j += 1  # LENGTH OF STRING
+
+    print("\nLET'S START\n")
+    disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30), bg='grey', fg='white', width=35)
+    disp_label.place(y=120, relx=0.5, anchor='center')
+    life_label = ttk.Label(window, text="LIFE = " + str(life), font=('italic', 15), bg='grey', fg='red')
+    life_label.place(y=70, x=900, anchor='center')
+
+
+def hang_man(guess):
+    global j, life, win, count, ges_word, entered_letter, disp_label, retry_label, won_label
+
+    for char in range(j):
+        # to check all elements in word
+        if guess.lower() == word[char]:  # checking our guess is
+            ges_word[char] = word[char]  # assigning the correct word to the char th position of ges_word
+            print(guess)
+            win += 1  # counting number of wins
+
+    if win == count:  # if guess is wrong
+        life -= 1
+        print(f"INCORRECT \033[91m{life} life's left\033[0m ")
+        life_label = ttk.Label(window, text="LIFE = " + str(life), font=('italic', 15), bg='grey', fg='red')
+        print(f'life {life}')
+        life_label.place(y=70, x=900, anchor='center')
+    elif guess in entered_letter:
+        win -= 1
+        print('\nYou have already guessed this letter\n')
+    else:
+        print('\033[92m you got it right \033[0m')
+
+    entered_letter[win] = guess
+    count = int(win)  # assigning number of wins to count
+
+    print(*ges_word)
+    disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30), bg='grey', fg='white', width=35)
+    disp_label.place(y=120, relx=0.5, anchor='center')
+
+    if life == 0:
+        print('\nsorry you have used all of you life !\n\nThe word was : ' + word + '\n Better luck next time .')
+        disp_label.place_forget()
+        retry_label = ttk.Label(window, text="The word was : " + word + "\nPress any button to RETRY",
+                                font=('Arial', 30),
+                                bg='grey', fg='MAGENTA')
+        retry_label.place(y=120, relx=0.5, anchor='center')
+    elif win == j:
+        print(*ges_word, '\nhurry ! , you have guessed the word right\n\033[95m\033[1m YOU WON!\033[0m')
+        won_label = ttk.Label(window, text="\nhurry ! , you have guessed the word right\nYOU WON!",
+                              font=('Arial', 30),
+                              bg='grey', fg='MAGENTA')
+        won_label.place(y=120, relx=0.5, anchor='center')
+
+
+# display
 window.title("Python GUI App")
 window.configure(bg='#121212')
 
@@ -27,39 +122,91 @@ posDown = int(window.winfo_screenheight() / 2 - winHeight / 2)
 window.geometry("{}x{}+{}+{}".format(winWidth, winHeight, posRight, posDown))
 window.resizable(False, False)
 
-DispLabel = ttk.Label(window, text='Are you a Geek?', font=('italic', 30), bg='grey', fg='white')
-DispLabel.place(y=120, relx=0.5, anchor='center')
+start()
 
+# row 1
+QButton = Button(window, text="Q", command=lambda: select_function(guess=QButton['text']))
+QButton.place(y=250, x=50, height=50)
 
-QButton = Button(window, text="Q", command=lambda: hm.hang_man(guess=QButton['text']))
-QButton.place(y=250, x=30, height=50)
+WButton = Button(window, text="W", command=lambda: select_function(guess=WButton['text']))
+WButton.place(y=250, x=140, height=50)
 
+EButton = Button(window, text="E", command=lambda: select_function(guess=EButton['text']))
+EButton.place(y=250, x=230, height=50)
 
-WButton = Button(window, text="W", command=lambda: hm.hang_man(guess=WButton['text']))
-WButton.place(y=250, x=120, height=50)
+RButton = Button(window, text="R", command=lambda: select_function(guess=RButton['text']))
+RButton.place(y=250, x=320, height=50)
 
-EButton = Button(window, text="E", command=lambda: hm.hang_man(guess=EButton['text']))
-EButton.place(y=250, x=210, height=50)
+TButton = Button(window, text="T", command=lambda: select_function(guess=TButton['text']))
+TButton.place(y=250, x=410, height=50)
 
-RButton = Button(window, text="R", command=lambda: hm.hang_man(guess=RButton['text']))
-RButton.place(y=250, x=300, height=50)
+YButton = Button(window, text="Y", command=lambda: select_function(guess=YButton['text']))
+YButton.place(y=250, x=500, height=50)
 
-TButton = Button(window, text="T", command=lambda: hm.hang_man(guess=TButton['text']))
-TButton.place(y=250, x=390, height=50)
+UButton = Button(window, text="U", command=lambda: select_function(guess=UButton['text']))
+UButton.place(y=250, x=590, height=50)
 
-YButton = Button(window, text="Y", command=lambda: hm.hang_man(guess=YButton['text']))
-YButton.place(y=250, x=480, height=50)
+IButton = Button(window, text="I", command=lambda: select_function(guess=IButton['text']))
+IButton.place(y=250, x=680, height=50)
 
-UButton = Button(window, text="U", command=lambda: hm.hang_man(guess=UButton['text']))
-UButton.place(y=250, x=570, height=50)
+OButton = Button(window, text="O", command=lambda: select_function(guess=OButton['text']))
+OButton.place(y=250, x=770, height=50)
 
-IButton = Button(window, text="I", command=lambda: hm.hang_man(guess=IButton['text']))
-IButton.place(y=250, x=660, height=50)
+PButton = Button(window, text="P", command=lambda: select_function(guess=PButton['text']))
+PButton.place(y=250, x=860, height=50)
 
-OButton = Button(window, text="O", command=lambda: hm.hang_man(guess=OButton['text']))
-OButton.place(y=250, x=750, height=50)
+# row 2
+AButton = Button(window, text="A", command=lambda: select_function(guess=AButton['text']))
+AButton.place(y=350, x=100, height=50)
 
-PButton = Button(window, text="P", command=lambda: hm.hang_man(guess=PButton['text']))
-PButton.place(y=250, x=840, height=50)
+SButton = Button(window, text="S", command=lambda: select_function(guess=SButton['text']))
+SButton.place(y=350, x=190, height=50)
+
+DButton = Button(window, text="D", command=lambda: select_function(guess=DButton['text']))
+DButton.place(y=350, x=280, height=50)
+
+FButton = Button(window, text="F", command=lambda: select_function(guess=FButton['text']))
+FButton.place(y=350, x=370, height=50)
+
+GButton = Button(window, text="G", command=lambda: select_function(guess=GButton['text']))
+GButton.place(y=350, x=460, height=50)
+
+HButton = Button(window, text="H", command=lambda: select_function(guess=HButton['text']))
+HButton.place(y=350, x=550, height=50)
+
+JButton = Button(window, text="J", command=lambda: select_function(guess=JButton['text']))
+JButton.place(y=350, x=640, height=50)
+
+KButton = Button(window, text="K", command=lambda: select_function(guess=KButton['text']))
+KButton.place(y=350, x=730, height=50)
+
+LButton = Button(window, text="L", command=lambda: select_function(guess=LButton['text']))
+LButton.place(y=350, x=820, height=50)
+
+# ROW 2
+ZButton = Button(window, text="Z", command=lambda: select_function(guess=ZButton['text']))
+ZButton.place(y=450, x=190, height=50)
+
+XButton = Button(window, text="X", command=lambda: select_function(guess=XButton['text']))
+XButton.place(y=450, x=280, height=50)
+
+CButton = Button(window, text="C", command=lambda: select_function(guess=CButton['text']))
+CButton.place(y=450, x=370, height=50)
+
+VButton = Button(window, text="V", command=lambda: select_function(guess=VButton['text']))
+VButton.place(y=450, x=460, height=50)
+
+BButton = Button(window, text="B", command=lambda: select_function(guess=BButton['text']))
+BButton.place(y=450, x=550, height=50)
+
+NButton = Button(window, text="N", command=lambda: select_function(guess=NButton['text']))
+NButton.place(y=450, x=640, height=50)
+
+MButton = Button(window, text="M", command=lambda: select_function(guess=MButton['text']))
+MButton.place(y=450, x=730, height=50)
+
+# row 3
+retry_button = tk.Button(text="RETRY", bg="red", command=lambda: start())
+retry_button.place(y=550, x=460, anchor='center')
 
 window.mainloop()
