@@ -1,4 +1,5 @@
-
+import os
+import sys
 import tkinter as tk
 import tkinter as ttk
 from tkinter.ttk import *
@@ -6,6 +7,14 @@ from RandomWord import random_word
 from squarcle import *
 
 window = ttk.Tk()
+try:
+    os.chdir(sys._MEIPASS)
+    icon_path = 'hangman.png'
+except AttributeError:
+    icon = ttk.PhotoImage(file='hangman.png')
+else:
+    icon = ttk.PhotoImage(file=icon_path)
+window.iconphoto(False, icon)
 canvas = ttk.Canvas(window, bg="#121212", bd=0, highlightthickness=0, width=900, height=300)
 textBox = round_rectangle(0, 50, 900, 200, '#1f1f1f', canvas)
 canvas.pack()
@@ -89,7 +98,7 @@ def hang_man(guess):
         entered_letter[win] = guess
 
     # assigning number of wins to count
-    count = int(win)  
+    count = int(win)
 
     disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30), bg='#1f1f1f', fg=primary_color,
                            width=35)
@@ -102,7 +111,7 @@ def hang_man(guess):
         retry_label.place(y=120, relx=0.5, anchor='center')
     elif win == j:
         disp_label.place_forget()
-        won_label = ttk.Label(window, text="\nYOU WON!", font=('Arial', 25), bg='#1f1f1f', fg='MAGENTA')
+        won_label = ttk.Label(window, text="\nYOU WON!", font=('Arial', 25), bg='#1f1f1f', fg=primary_color)
         won_label.place(y=145, relx=0.5, anchor='center')
         disp_word = ttk.Label(window, text=' '.join(ges_word), font=('italic', 25), bg='#1f1f1f', fg='#03DAC6')
         disp_word.place(y=110, relx=0.5, anchor='center')
