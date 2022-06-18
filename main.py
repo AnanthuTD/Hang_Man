@@ -1,3 +1,4 @@
+
 import tkinter as tk
 import tkinter as ttk
 from tkinter.ttk import *
@@ -6,10 +7,12 @@ from squarcle import *
 
 window = ttk.Tk()
 canvas = ttk.Canvas(window, bg="#121212", bd=0, highlightthickness=0, width=900, height=300)
-textBox = round_rectangle(0, 50, 900, 200, 'grey', canvas)
+textBox = round_rectangle(0, 50, 900, 200, '#1f1f1f', canvas)
 canvas.pack()
 
 # function variable declaration
+primary_color = '#BB86FC'
+life_color = '#CF6679'
 j = 0
 win = 0
 count = 0
@@ -28,6 +31,7 @@ won_label = ttk.Label()
 def select_function(guess):
     if life == 0:
         retry_label.place_forget()
+        won_label.place_forget()
         start()
     else:
         hang_man(guess)
@@ -43,6 +47,9 @@ def start():
     word = ''
     life = 5
     word = str(random_word())  # selecting a random word
+    won_label.place_forget()
+    retry_label.place_forget()
+    entered_letter = []
 
     print(word)
     print('\033[1m \033[92m-------------------------------------------------------------------\033[92m\n'
@@ -55,14 +62,15 @@ def start():
     for i in word:
         if i.isalpha():
             ges_word.append('_')  # (_ _ _ ......)
-            entered_letter.append('_')
-            entered_letter.append('_')
+            entered_letter.append(' ')
+            entered_letter.append(' ')
             j += 1  # LENGTH OF STRING
 
     print("\nLET'S START\n")
-    disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30), bg='grey', fg='white', width=35)
+    disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30), bg='#1f1f1f', fg=primary_color,
+                           width=35)
     disp_label.place(y=120, relx=0.5, anchor='center')
-    life_label = ttk.Label(window, text="LIFE = " + str(life), font=('italic', 15), bg='grey', fg='red')
+    life_label = ttk.Label(window, text="LIFE = " + str(life), font=('italic', 15), bg='#1f1f1f', fg=life_color)
     life_label.place(y=70, x=900, anchor='center')
 
 
@@ -79,7 +87,7 @@ def hang_man(guess):
     if win == count:  # if guess is wrong
         life -= 1
         print(f"INCORRECT \033[91m{life} life's left\033[0m ")
-        life_label = ttk.Label(window, text="LIFE = " + str(life), font=('italic', 15), bg='grey', fg='red')
+        life_label = ttk.Label(window, text="LIFE = " + str(life), font=('italic', 15), bg='#1f1f1f', fg=life_color)
         print(f'life {life}')
         life_label.place(y=70, x=900, anchor='center')
     elif guess in entered_letter:
@@ -87,27 +95,31 @@ def hang_man(guess):
         print('\nYou have already guessed this letter\n')
     else:
         print('\033[92m you got it right \033[0m')
+        entered_letter[win] = guess
+        print(entered_letter)
 
-    entered_letter[win] = guess
     count = int(win)  # assigning number of wins to count
 
     print(*ges_word)
-    disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30), bg='grey', fg='white', width=35)
+    disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30), bg='#1f1f1f', fg=primary_color,
+                           width=35)
     disp_label.place(y=120, relx=0.5, anchor='center')
-
+    print("win = " + str(win) + "j = " + str(j))
     if life == 0:
         print('\nsorry you have used all of you life !\n\nThe word was : ' + word + '\n Better luck next time .')
         disp_label.place_forget()
         retry_label = ttk.Label(window, text="The word was : " + word + "\nPress any button to RETRY",
-                                font=('Arial', 30),
-                                bg='grey', fg='MAGENTA')
+                                font=('Arial', 25),
+                                bg='#1f1f1f', fg=primary_color)
         retry_label.place(y=120, relx=0.5, anchor='center')
     elif win == j:
+        print("hi")
         print(*ges_word, '\nhurry ! , you have guessed the word right\n\033[95m\033[1m YOU WON!\033[0m')
-        won_label = ttk.Label(window, text="\nhurry ! , you have guessed the word right\nYOU WON!",
-                              font=('Arial', 30),
-                              bg='grey', fg='MAGENTA')
-        won_label.place(y=120, relx=0.5, anchor='center')
+        disp_label.place_forget()
+        won_label = ttk.Label(window, text="\nYOU WON!", font=('Arial', 25), bg='#1f1f1f', fg='MAGENTA')
+        won_label.place(y=145, relx=0.5, anchor='center')
+        disp_word = ttk.Label(window, text=' '.join(ges_word), font=('italic', 25), bg='#1f1f1f', fg='#03DAC6')
+        disp_word.place(y=110, relx=0.5, anchor='center')
 
 
 # display
@@ -206,7 +218,9 @@ MButton = Button(window, text="M", command=lambda: select_function(guess=MButton
 MButton.place(y=450, x=730, height=50)
 
 # row 3
-retry_button = tk.Button(text="RETRY", bg="red", command=lambda: start())
+retry_button = tk.Button(text="RETRY", bg="red",
+                         command=lambda: start())
+
 retry_button.place(y=550, x=460, anchor='center')
 
 window.mainloop()
