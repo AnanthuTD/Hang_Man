@@ -10,9 +10,11 @@ canvas = ttk.Canvas(window, bg="#121212", bd=0, highlightthickness=0, width=900,
 textBox = round_rectangle(0, 50, 900, 200, '#1f1f1f', canvas)
 canvas.pack()
 
-# function variable declaration
+# color
 primary_color = '#BB86FC'
 life_color = '#CF6679'
+
+# global variable declaration
 j = 0
 win = 0
 count = 0
@@ -21,7 +23,8 @@ str1 = ''
 word = ''
 entered_letter = []
 list_ = 1
-life = 5  # total five life left
+# total five life left
+life = 5
 
 retry_label = ttk.Label()
 disp_label = ttk.Label()
@@ -46,27 +49,20 @@ def start():
     ges_word = []
     word = ''
     life = 5
-    word = str(random_word())  # selecting a random word
+    # selecting a random word
+    word = str(random_word())
     won_label.place_forget()
     retry_label.place_forget()
     entered_letter = []
-
-    print(word)
-    print('\033[1m \033[92m-------------------------------------------------------------------\033[92m\n'
-          '\n'
-          '    \033[96m                       HANGMAN                     \033[96m            \n'
-          '\n'
-          '\033[92m--------------------------------------------------------------------\033[0m\n'
-          )
 
     for i in word:
         if i.isalpha():
             ges_word.append('_')  # (_ _ _ ......)
             entered_letter.append(' ')
             entered_letter.append(' ')
-            j += 1  # LENGTH OF STRING
+            # LENGTH OF STRING
+            j += 1
 
-    print("\nLET'S START\n")
     disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30), bg='#1f1f1f', fg=primary_color,
                            width=35)
     disp_label.place(y=120, relx=0.5, anchor='center')
@@ -81,40 +77,30 @@ def hang_man(guess):
         # to check all elements in word
         if guess.lower() == word[char]:  # checking our guess is
             ges_word[char] = word[char]  # assigning the correct word to the char th position of ges_word
-            print(guess)
             win += 1  # counting number of wins
 
     if win == count:  # if guess is wrong
         life -= 1
-        print(f"INCORRECT \033[91m{life} life's left\033[0m ")
         life_label = ttk.Label(window, text="LIFE = " + str(life), font=('italic', 15), bg='#1f1f1f', fg=life_color)
-        print(f'life {life}')
         life_label.place(y=70, x=900, anchor='center')
     elif guess in entered_letter:
         win -= 1
-        print('\nYou have already guessed this letter\n')
     else:
-        print('\033[92m you got it right \033[0m')
         entered_letter[win] = guess
-        print(entered_letter)
 
-    count = int(win)  # assigning number of wins to count
+    # assigning number of wins to count
+    count = int(win)  
 
-    print(*ges_word)
     disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30), bg='#1f1f1f', fg=primary_color,
                            width=35)
     disp_label.place(y=120, relx=0.5, anchor='center')
-    print("win = " + str(win) + "j = " + str(j))
     if life == 0:
-        print('\nsorry you have used all of you life !\n\nThe word was : ' + word + '\n Better luck next time .')
         disp_label.place_forget()
         retry_label = ttk.Label(window, text="The word was : " + word + "\nPress any button to RETRY",
                                 font=('Arial', 25),
                                 bg='#1f1f1f', fg=primary_color)
         retry_label.place(y=120, relx=0.5, anchor='center')
     elif win == j:
-        print("hi")
-        print(*ges_word, '\nhurry ! , you have guessed the word right\n\033[95m\033[1m YOU WON!\033[0m')
         disp_label.place_forget()
         won_label = ttk.Label(window, text="\nYOU WON!", font=('Arial', 25), bg='#1f1f1f', fg='MAGENTA')
         won_label.place(y=145, relx=0.5, anchor='center')
