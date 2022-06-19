@@ -1,3 +1,4 @@
+import importlib.util
 import os
 import sys
 import tkinter as tk
@@ -6,7 +7,12 @@ from tkinter.ttk import *
 from RandomWord import random_word
 from squarcle import *
 
+if '_PYIBoot_SPLASH' in os.environ and importlib.util.find_spec("pyi_splash"):
+    import pyi_splash
+    pyi_splash.update_text('UI Loaded ...')
+    pyi_splash.close()
 window = ttk.Tk()
+
 try:
     os.chdir(sys._MEIPASS)
     icon_path = 'hangman.png'
