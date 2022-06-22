@@ -4,4 +4,4 @@
 </picture>
 
  Word Guess game using python.
- !(images/darkScreen.png)
+ ![dark theme](images/darkScreen.png)
