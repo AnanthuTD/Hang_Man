@@ -7,17 +7,23 @@ from tkinter.ttk import *
 from RandomWord import random_word
 from squarcle import *
 
+# to display the splash screen when executing the program
 if '_PYIBoot_SPLASH' in os.environ and importlib.util.find_spec("pyi_splash"):
     import pyi_splash
     pyi_splash.update_text('UI Loaded ...')
     pyi_splash.close()
+
+# declaring window
 window = ttk.Tk()
 
+# to get the location of the images used in the file when using --onefile method to prepare an executable
 try:
     os.chdir(sys._MEIPASS)
-    icon_path = 'hangman.png'
+    icon_path = 'images/hangman.png'
+    light_path = 'images/light_mode.png'
+    dark_path = 'images/night_mode.png'
 except AttributeError:
-    icon = ttk.PhotoImage(file='hangman.png')
+    icon = ttk.PhotoImage(file='images/hangman.png')
 else:
     icon = ttk.PhotoImage(file=icon_path)
 window.iconphoto(False, icon)
@@ -28,6 +34,57 @@ canvas.pack()
 # color
 primary_color = '#BB86FC'
 life_color = '#CF6679'
+background_color = '#1f1f1f'
+flag = 0
+
+try:
+    photo = tk.PhotoImage(file=r"images/night_mode.png")
+except:
+    photo = tk.PhotoImage(file=dark_path)
+
+theme_button = ttk.Button(bg=background_color, image=photo, width=50, command=lambda: light_theme())
+theme_button.place(y=550, x=560, anchor='center')
+
+
+def dark_theme():
+    global background_color, textBox, primary_color, photo, theme_button, disp_label
+    primary_color = '#BB86FC'
+    background_color = '#1f1f1f'
+    window.configure(bg='#121212')
+    canvas.configure(bg='#121212')
+    textBox = round_rectangle(0, 50, 900, 200, background_color, canvas)
+    disp_label.configure(bg=background_color, fg=primary_color)
+    won_label.configure(bg=background_color)
+    retry_label.configure(bg=background_color)
+    life_label.configure(bg=background_color)
+    try:
+        photo = tk.PhotoImage(file=r"images/night_mode.png")
+    except:
+        photo = tk.PhotoImage(file=dark_path)
+    theme_button = ttk.Button(bg=background_color, image=photo, width=50, command=lambda: light_theme())
+    theme_button.place(y=550, x=560, anchor='center')
+
+
+def light_theme():
+    global background_color, textBox, primary_color, theme_button, photo
+    primary_color = '#00203f'
+    background_color = '#adefd1'
+    window.configure(bg='white')
+    canvas.configure(bg='WHITE')
+    textBox = round_rectangle(0, 50, 900, 200, background_color, canvas)
+    disp_label.configure(bg=background_color, fg=primary_color)
+    won_label.configure(bg=background_color)
+    retry_label.configure(bg=background_color)
+    life_label.configure(bg=background_color)
+    try:
+        photo = tk.PhotoImage(file=r"images/light_mode.png")
+    except:
+        photo = tk.PhotoImage(file=light_path)
+    theme_button.place_forget()
+    theme_button.configure(bg=background_color, image=photo, width=50, command=lambda: dark_theme())
+    theme_button.place(y=550, x=560, anchor='center')
+    disp_label.place()
+
 
 # global variable declaration
 j = 0
@@ -44,6 +101,7 @@ life = 5
 retry_label = ttk.Label()
 disp_label = ttk.Label()
 won_label = ttk.Label()
+life_label = ttk.Label()
 
 
 def select_function(guess):
@@ -57,7 +115,7 @@ def select_function(guess):
 
 def start():
     # word = random.choice(lst)  # SELECTING A RANDOM WORD FROM word_list.py
-    global word, life, j, win, count, ges_word, entered_letter, disp_label
+    global word, life, j, win, count, ges_word, entered_letter, disp_label, life_label
     j = 0
     win = 0
     count = 0
@@ -78,15 +136,15 @@ def start():
             # LENGTH OF STRING
             j += 1
 
-    disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30), bg='#1f1f1f', fg=primary_color,
+    disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30), bg=background_color, fg=primary_color,
                            width=35)
     disp_label.place(y=120, relx=0.5, anchor='center')
-    life_label = ttk.Label(window, text="LIFE = " + str(life), font=('italic', 15), bg='#1f1f1f', fg=life_color)
+    life_label = ttk.Label(window, text="LIFE = " + str(life), font=('italic', 15), bg=background_color, fg=life_color)
     life_label.place(y=70, x=900, anchor='center')
 
 
 def hang_man(guess):
-    global j, life, win, count, ges_word, entered_letter, disp_label, retry_label, won_label
+    global j, life, win, count, ges_word, entered_letter, disp_label, retry_label, won_label, life_label
 
     for char in range(j):
         # to check all elements in word
@@ -96,7 +154,8 @@ def hang_man(guess):
 
     if win == count:  # if guess is wrong
         life -= 1
-        life_label = ttk.Label(window, text="LIFE = " + str(life), font=('italic', 15), bg='#1f1f1f', fg=life_color)
+        life_label = ttk.Label(window, text="LIFE = " + str(life), font=('italic', 15), bg=background_color,
+                               fg=life_color)
         life_label.place(y=70, x=900, anchor='center')
     elif guess in entered_letter:
         win -= 1
@@ -106,20 +165,21 @@ def hang_man(guess):
     # assigning number of wins to count
     count = int(win)
 
-    disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30), bg='#1f1f1f', fg=primary_color,
+    disp_label = ttk.Label(window, text=' '.join(ges_word), font=('italic', 30,), bg=background_color, fg=primary_color,
                            width=35)
     disp_label.place(y=120, relx=0.5, anchor='center')
     if life == 0:
         disp_label.place_forget()
         retry_label = ttk.Label(window, text="The word was : " + word + "\nPress any button to RETRY",
                                 font=('Arial', 25),
-                                bg='#1f1f1f', fg=primary_color)
+                                bg=background_color, fg=primary_color)
         retry_label.place(y=120, relx=0.5, anchor='center')
     elif win == j:
         disp_label.place_forget()
-        won_label = ttk.Label(window, text="\nYOU WON!", font=('Arial', 25), bg='#1f1f1f', fg=primary_color)
+        won_label = ttk.Label(window, text="\nYOU WON!", font=('Arial', 25), bg=background_color, fg=primary_color)
         won_label.place(y=145, relx=0.5, anchor='center')
-        disp_word = ttk.Label(window, text=' '.join(ges_word), font=('italic', 25), bg='#1f1f1f', fg='#03DAC6')
+        disp_label.place_forget()
+        disp_word = ttk.Label(window, text=' '.join(ges_word), font=('italic', 25,), bg=background_color, fg='#03DAC6')
         disp_word.place(y=110, relx=0.5, anchor='center')
 
 
@@ -221,7 +281,6 @@ MButton.place(y=450, x=730, height=50)
 # row 3
 retry_button = tk.Button(text="RETRY", bg="red",
                          command=lambda: start())
-
 retry_button.place(y=550, x=460, anchor='center')
 
 window.mainloop()
