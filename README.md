@@ -1,3 +1,4 @@
 # Hang_Man
- Word Guess game using python. 
-![dark Theme](images/hangman.png)!
+ 
+![dark Theme](images/hangman.png)
+ Word Guess game using python.
